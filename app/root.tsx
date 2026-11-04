@@ -50,7 +50,7 @@ export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
 ];
 
-const THEME_INIT_SCRIPT = getThemeInitScript();
+const THEME_INIT_SCRIPT = getThemeInitScript("dark");
 const LOCALE_INIT_SCRIPT = getLocaleInitScript();
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -185,6 +185,7 @@ export default function Root() {
       <AppProviders
         queryClient={queryClient}
         skeletonLayout={skeletonLayoutForPath(pathname)}
+        defaultTheme="dark"
         i18n={{ catalog: i18nCatalog }}
       >
         <DbSyncSetup />

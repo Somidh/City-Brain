@@ -18,13 +18,24 @@ export interface NavigationState {
   path?: string;
   publicPath?: string;
   threadId?: string;
+  /** City Brain: the incident open in the dashboard drawer or citizen view. */
+  incidentId?: string;
 }
 
 export function useNavigationState() {
   useAgentRouteState<NavigationState>({
     browserTabId: TAB_ID,
     requestSource: TAB_ID,
-    getNavigationState: ({ pathname }) => navigationStateForPath(pathname),
+    getNavigationState: ({ pathname, searchParams }) => {
+      const state = navigationStateForPath(pathname);
+      const incidentId =
+        searchParams?.get("incident") ??
+        pathname.match(/^\/track\/([^/]+)/)?.[1] ??
+        null;
+      return incidentId
+        ? { ...state, incidentId: decodeURIComponent(incidentId).toUpperCase() }
+        : state;
+    },
     getCommandPath: commandPathForNavigation,
   });
 }
@@ -73,6 +84,9 @@ export function navigationStateForPath(pathname: string): NavigationState {
 }
 
 function viewForPath(pathname: string): string {
+  if (pathname.startsWith("/city")) return "city";
+  if (pathname.startsWith("/report")) return "report";
+  if (pathname.startsWith("/track")) return "track";
   if (isChatPathname(pathname)) return "chat";
   if (pathname === HOME_PATH) return "home";
   if (pathname.startsWith("/database")) return "database";
@@ -88,6 +102,10 @@ function viewForPath(pathname: string): string {
 
 function pathForView(view?: string): string {
   switch (view) {
+    case "city":
+      return "/city";
+    case "report":
+      return "/report";
     case "chat":
     case "ask":
       return NEW_CHAT_PATH;

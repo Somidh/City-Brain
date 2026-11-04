@@ -38,6 +38,8 @@ data/.sessions.json
 
 learnings.md
 
+.tmp-*
+
 .vercel/
 .agent-native/
 data/*.lock

@@ -36,3 +36,18 @@ workspace chrome.
 - Compare sibling apps before reusing their palette or composition.
 - Keep pinning, rename, archive, and routing wired to the shared chat thread
   model; the sidebar is a presentation layer, not a second history store.
+
+## City Brain direction (`/city`, `/report`, `/track/:id`)
+
+| Decision | Choice |
+| --- | --- |
+| Product mode | `operate`: one supervisor watching a live city and making the calls agents can't |
+| Audience and cadence | Supervisor on a big screen all shift, glancing more than reading |
+| Visual world | Night-shift control room over a living city: calm dark, small lights that mean something |
+| Palette family | Pine / teal accent (`--city-accent`) on cool navy-black neutrals; severity stays semantic (red / orange / amber / green) |
+| Type treatment | Sans-first (Inter), monospace only for ids, money and the action names |
+| Composition | Focused workbench: decisions left, living map centre, agent chatter right, city mood + stats bottom |
+| Shape language | Soft utility surfaces (`rounded-xl`), city blocks on asphalt, round markers and worker tokens |
+| Anti-references | Generic gradient hero, glass cards, equal-weight stat tiles over the content, decoration with no state behind it |
+
+Fun is earned by state, not ornament. Workers drive along dashed routes to their jobs. New reports drop in with a ripple. An agent node lights up when that agent acts. Windows flicker in the skylines. The city has a mood face computed from emergencies, waiting decisions and overdue jobs. All motion is short and switches off under `prefers-reduced-motion`. Tokens live under `.city-ops` in `app/global.css`.

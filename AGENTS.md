@@ -31,3 +31,25 @@ Use `adding-a-feature` for functional parity and `frontend-design` for a user-fa
 Before building common workspace or agent UI, read `agent-native-toolkit`; for supported customization, read `customizing-agent-native`.
 
 - Guarded verification: run `pnpm agent-native:doctor`; fix findings before done.
+
+## City Brain
+
+Autonomous city operations on a simulated 12-zone city. `/city` is the supervisor dashboard (`?incident=INC-042` opens an incident). `/report` is the citizen form, and `/track/:incidentId` is the citizen's SMS view. A 1 s server loop (`server/city/orchestrator.ts`) runs the pipeline agents (`server/city/agents.ts`). They act only through the actions below, the same ones the UI buttons and you call.
+
+- Stages: reported → classified → routed → assigned → travelling → working → review → resolved. An incident can also be escalated, merged or closed.
+- Invariants live in the actions. `assign-worker` rejects `skill_mismatch`, `worker_at_capacity` (max 2 open jobs) and `budget_insufficient`. Report these rejections; don't retry them silently.
+- Escalations wait for `resolve-escalation` (approve/override). Get the escalationId from `get-city-summary`.
+- On city pages, `navigation.incidentId` is the incident the supervisor has open.
+- Times are UTC ISO strings and money is whole dollars.
+
+| Action | Purpose |
+|---|---|
+| get-city-summary | Stats, departments, workers, open escalations, recent activity |
+| list-incidents / get-incident | Find incidents / full history of one |
+| resolve-escalation | Approve or override an agent escalation |
+| assign-worker | Assign or reassign a field worker |
+| classify-incident / route-incident | Re-classify / re-route before assignment |
+| submit-report | File a citizen report |
+| adjust-budget | Add or remove department budget |
+| escalate-issue / notify-citizen | Raise to the supervisor / text the citizen |
+| set-simulation / reset-simulation | Pause, toggle auto reports / reseed (only when asked) |

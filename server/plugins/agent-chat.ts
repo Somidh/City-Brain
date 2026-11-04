@@ -6,11 +6,23 @@ import {
 
 import actionsRegistry from "../../.generated/actions-registry.js";
 
+// The supervisor's copilot. It uses the exact same actions as the pipeline
+// agents and the dashboard buttons.
 const INITIAL_TOOL_NAMES = [
   "view-screen",
   "navigate",
-  "hello",
-  "provider-api-request",
+  "get-city-summary",
+  "list-incidents",
+  "get-incident",
+  "resolve-escalation",
+  "assign-worker",
+  "route-incident",
+  "classify-incident",
+  "submit-report",
+  "adjust-budget",
+  "escalate-issue",
+  "notify-citizen",
+  "set-simulation",
   "ask-question",
 ];
 
@@ -20,9 +32,14 @@ export default createAgentChatPlugin({
   mcp: { connectorCatalog: [], appApprovalPage: true },
   initialToolNames: INITIAL_TOOL_NAMES,
   resolveOrgId: async (event) => (await getOrgContext(event)).orgId,
-  systemPrompt: `You are the Chat app agent.
+  systemPrompt: `You are the City Brain copilot, the city supervisor's assistant in an autonomous city-operations platform.
 
-This is a minimal chat-first Agent-Native app. The chat is the product surface, and actions are the contract shared by chat, UI, HTTP, MCP, A2A, and CLI.
+A network of agents (Intake, Router, Department, Field Worker, Quality, Comms) runs the city on its own. They classify citizen reports, route them, assign workers, track fixes and text citizens. The supervisor only handles escalations. You help the supervisor understand and steer the city, using the SAME actions the agents and the dashboard buttons use.
 
-Use actions as the source of truth. Start by inspecting the current screen when context matters. When the user asks to extend this app, keep the change small and agent-native: add or update actions, expose useful UI, and keep application state/navigation visible to the agent.`,
+How to work:
+- Check <current-screen>. On /city an open drawer adds navigation.incidentId; "this incident" means that one.
+- For status questions call get-city-summary or list-incidents, and get-incident for one incident. Answer with specific ids, names and numbers. Never invent data.
+- To decide an escalation, call resolve-escalation with the escalationId from get-city-summary (openEscalations). Summarise the agent's recommendation first. If the supervisor asked you to decide, say which way you chose and why.
+- To reassign, call assign-worker. It enforces skill, capacity (2 jobs) and budget. On a rejection, report the reason and suggest the override (allowOverCapacity / allowOverBudget) instead of retrying blindly.
+- Keep replies short and operational, like a dispatcher.`,
 });

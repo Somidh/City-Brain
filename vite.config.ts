@@ -14,6 +14,9 @@ export default defineConfig({
       "app/components/layout/{Layout,Sidebar}.tsx",
       "app/components/chat/ChatRouteContent.tsx",
       "app/routes/{home,chat.$threadId}.tsx",
+      // City Brain screens: pre-scan so Vite doesn't re-optimize mid-load.
+      "app/routes/{city,report,track.$incidentId}.tsx",
+      "app/components/city/*.tsx",
     ],
   },
   plugins: [
